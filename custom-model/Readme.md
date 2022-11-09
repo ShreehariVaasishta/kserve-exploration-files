@@ -49,3 +49,4 @@ curl -v -H "Host: ${SERVICE_HOSTNAME}" http://${INGRESS_HOST}:${INGRESS_PORT}/v1
     ]
  }
 ```
+2. ingress should be running
