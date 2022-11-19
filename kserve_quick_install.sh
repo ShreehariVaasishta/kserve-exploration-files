@@ -81,21 +81,21 @@ EOF
 
 bin/istioctl manifest apply -f istio-minimal-operator.yaml -y;
 
-echo "😀 Successfully installed Istio"
+echo ">>> Successfully installed Istio"
 
 # Install Knative
 if [ $deploymentMode = serverless ]; then
    kubectl apply --filename https://github.com/knative/serving/releases/download/${KNATIVE_VERSION}/serving-crds.yaml
    kubectl apply --filename https://github.com/knative/serving/releases/download/${KNATIVE_VERSION}/serving-core.yaml
    kubectl apply --filename https://github.com/knative/net-istio/releases/download/${KNATIVE_VERSION}/release.yaml
-   echo "😀 Successfully installed Knative"
+   echo ">>> Successfully installed Knative"
 fi
 
 # Install Cert Manager
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/${CERT_MANAGER_VERSION}/cert-manager.yaml
 kubectl wait --for=condition=available --timeout=600s deployment/cert-manager-webhook -n cert-manager
 cd ..
-echo "😀 Successfully installed Cert Manager"
+echo ">>> Successfully installed Cert Manager"
 
 # Install KServe
 KSERVE_CONFIG=kfserving.yaml
@@ -107,7 +107,9 @@ kubectl apply -f https://github.com/kserve/kserve/releases/download/${KSERVE_VER
 # Install KServe built-in servingruntimes
 kubectl wait --for=condition=ready pod -l control-plane=kserve-controller-manager -n kserve --timeout=300s
 kubectl apply -f https://github.com/kserve/kserve/releases/download/${KSERVE_VERSION}/kserve-runtimes.yaml
-echo "😀 Successfully installed KServe"
+echo ">>> Successfully installed KServe ${KSERVE_VERSION}"
 
 # Clean up
 rm -rf istio-${ISTIO_VERSION}
+
+echo ">>>> Installation done"
