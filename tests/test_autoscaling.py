@@ -68,16 +68,14 @@ def create_inference_service():
         containers=[
             client.V1Container(
                 name="kserve-container",
-                image="shreeharivl/custom-model:v1.2",
-                resources=client.V1ResourceRequirements(
-                    requests={"cpu": "50m", "memory": "128Mi"}, limits={"cpu": "100m", "memory": "1Gi"}
-                ),
+                image="shreeharivl/custom-model:v1.6",
                 env=[
                     client.V1EnvVar(
                         name="STORAGE_URI",
                         value=MODEL,
                     )
                 ],
+                image_pull_policy="IfNotPresent",
             )
         ],
     )
@@ -92,12 +90,10 @@ def create_inference_service():
     kserve_client.create(isvc)
     kserve_client.wait_isvc_ready(service_name, namespace=k8s_namespace)
     pods = kserve_client.core_api.list_namespaced_pod(
-        k8s_namespace, label_selector="serving.kserve.io/inferenceservice={}".format(service_name)
+        k8s_namespace, label_selector=f"serving.kserve.io/inferenceservice={service_name}"
     )
+
     print(pods)
-    # kserve_client = KServeClient()
-    # x = kserve_client.create(isvc, namespace=k8s_namespace, watch=True)
-    # pprint(x)
 
 
 create_inference_service()
