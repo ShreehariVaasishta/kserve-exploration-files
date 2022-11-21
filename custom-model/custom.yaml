@@ -11,4 +11,5 @@ spec:
       url: http://message-dumper.default/  
     containers:
       - name: "kserve-container"
-        image: shreeharivl/custom-model:v1.2
+        image: shreeharivl/custom-model:v1.6
+        imagePullPolicy: IfNotPresent

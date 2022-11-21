@@ -18,6 +18,7 @@ import torch
 from PIL import Image
 import base64
 import io
+import os
 
 
 class AlexNetModel(kserve.Model):
@@ -32,6 +33,10 @@ class AlexNetModel(kserve.Model):
         print("------LOAD - hollllla folks-------")
         self.model = models.alexnet(pretrained=True)
         self.model.eval()
+        try:
+            print(os.listdir("/mnt/models/"))
+        except Exception as e:
+            print(f"\n{e=}\n\n")
         self.ready = True
 
     def predict(self, payload: Dict, headers: Dict[str, str] = None) -> Dict:
